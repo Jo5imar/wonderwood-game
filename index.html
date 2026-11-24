@@ -1,139 +1,74 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#122327"><meta name="description" content="A playful visual mystery. Explore Wonderwood and find the missing golden pie.">
-<title>What Happened Here? — The Missing Golden Pie</title>
-<style>
-:root{font-family:ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#fff2d5;background:#11252a}*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:#11252a}
-button{font:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-button:focus-visible{outline:3px solid #fff4b9;outline-offset:3px}
-.game{min-height:100dvh;max-width:680px;margin:auto;display:flex;flex-direction:column;background:linear-gradient(#193638,#101c24);box-shadow:0 0 60px #0007}
-header{height:56px;flex:none;display:flex;justify-content:space-between;align-items:center;gap:9px;padding:7px 13px;z-index:3}
-.brand{font-weight:1000;font-size:14px;line-height:1.05;color:#ffdf9d}.brand small{font-size:10px;display:block;color:#a3caba;font-weight:700;letter-spacing:1.4px;margin-top:3px}
-.controls{display:flex;gap:6px}.iconbtn{background:#31504a;color:#ffedbb;border:1px solid #8caa88;min-width:42px;min-height:42px;border-radius:13px;font-size:19px}
-.stage-shell{position:relative;width:100%;flex:1;min-height:350px;max-height:calc(100dvh - 235px);background:#4b3a2c;overflow:hidden;isolation:isolate}
-.stage-art{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;filter:saturate(1.25) contrast(1.04)}
-.stage-shell:before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(#07151b66,transparent 20%,transparent 72%,#11242e66)}
-.ambient{position:absolute;pointer-events:none;z-index:1}
-.lamp{width:100px;height:100px;border-radius:50%;background:radial-gradient(circle,#fff9ca85 0,#ffba4538 33%,transparent 72%);top:6%;animation:glow 3s ease-in-out infinite alternate}.lamp.a{left:-3%}.lamp.b{right:-3%;animation-delay:-1.2s}
-.rain{left:54%;top:19%;width:30%;height:28%;opacity:.4;transform:skew(-10deg);background:repeating-linear-gradient(110deg,transparent 0 16px,#dbfcf388 17px 18px,transparent 19px 31px);background-size:100% 95px;animation:rain 2.9s linear infinite;mix-blend-mode:screen}
-.floaty{width:5px;height:5px;border-radius:50%;background:#ffe6a0;box-shadow:0 0 13px 4px #ffc65d;animation:fly 5s infinite alternate}.floaty.f1{top:19%;left:30%}.floaty.f2{top:56%;left:78%;animation-delay:-2s}.floaty.f3{top:75%;left:16%;animation-delay:-4s}
-.stage-title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:3;background:#13282ae8;color:#ffdea0;border:1px solid #ccab6b;border-radius:99px;padding:7px 12px;font-size:10px;letter-spacing:1.1px;font-weight:900;white-space:nowrap;max-width:96%;text-align:center}
-.clue{position:absolute;z-index:4;transform:translate(-50%,-50%);border:none;border-radius:50%;width:51px;height:51px;background:#ffe6a7db;box-shadow:0 0 0 4px #ffb84e69,0 0 23px 7px #ffc1645c;font-size:28px;display:grid;place-items:center;animation:pulse 2.1s ease-in-out infinite}.clue.seen{background:#a6f3c4d9;box-shadow:0 0 0 3px #c4f8d18b;animation:none}.clue:active{transform:translate(-50%,-50%) scale(.87)}
-.ollie{position:absolute;z-index:3;bottom:1%;left:1%;display:flex;align-items:flex-end;gap:3px;max-width:69%;pointer-events:none}
-.ollie img{width:75px;height:95px;object-fit:contain;filter:drop-shadow(0 5px 7px #0009);animation:otter 3.3s ease-in-out infinite;pointer-events:none}
-.speech{font-size:12px;line-height:1.3;color:#392821;font-weight:850;background:#fff0bf;border:2px solid #bb864f;border-radius:13px 13px 13px 3px;padding:9px;box-shadow:0 5px 0 #1b2e31a8;margin-bottom:26px;max-width:250px}
-.speech.bounce{animation:speech .36s ease-out}
-.bottom{position:relative;z-index:2;flex:none;min-height:179px;display:flex;flex-direction:column;padding:9px 12px calc(11px + env(safe-area-inset-bottom));background:linear-gradient(#203c3b,#12272b);border-top:2px solid #b28f5a}
-.row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.overline{color:#e8d29a;font-size:10px;font-weight:950;letter-spacing:1.2px}
-.case-title{font-size:19px;font-weight:1000;line-height:1.1;margin:2px 0}
-.tiny{color:#bad3cc;font-size:12px;line-height:1.3}
-.progress-track{height:7px;background:#0b1e22;border-radius:50px;overflow:hidden;margin:8px 0}
-.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,#60db9a,#ffd780);transition:width .25s}
-.evidence{display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;min-height:42px}.evidence::-webkit-scrollbar{display:none}
-.token{min-width:37px;height:37px;border:1px dashed #7e9f91;border-radius:10px;background:#244540;color:#b7c5b6;font-size:19px}
-.token.found{background:#3d7357;border:1px solid #a9ebb6;color:white}
-.actions{display:flex;gap:8px;margin-top:8px}.btn{width:100%;border-radius:13px;padding:11px 14px;border:1px solid #fff0ac;min-height:49px;background:#fbd17a;color:#392722;font-size:15px;font-weight:950;box-shadow:0 3px 0 #9b6538}.btn.secondary{width:auto;min-width:84px;background:#365951;color:#ffe7ac;border-color:#7b987d;box-shadow:none}
-.btn:disabled{opacity:.55;filter:saturate(.3)}.muted{font-size:12px;line-height:1.4;color:#bcdbd1}.hidden{display:none!important}
-.overlay{position:fixed;inset:0;z-index:20;display:flex;justify-content:center;align-items:flex-end;background:#051519b8;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
-.panel{width:min(100%,560px);max-height:87dvh;overflow-y:auto;border:3px solid #d8a463;border-radius:22px;background:#fff0ce;color:#422c23;padding:15px;box-shadow:0 -10px 65px #000b;animation:up .25s ease-out}
-.panel-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.panel h2{margin:3px 0 10px;font-size:22px}.close{background:#e8c693;color:#43291e;border:1px solid #b78957;width:43px;height:43px;border-radius:13px;font-size:22px}
-.clue-close{display:flex;gap:12px;align-items:center}.clue-close img{width:40%;max-width:180px;aspect-ratio:1/1;object-fit:contain;border-radius:14px;background:#80613e}
-.clue-close p{font-size:14px;line-height:1.45;margin:5px 0}
-.caption{font-size:11px;letter-spacing:1px;font-weight:900;color:#8d592b}
-.option{width:100%;min-height:56px;padding:12px 14px;text-align:left;background:#f7dfa9;color:#463126;border:2px solid #c5985a;border-radius:14px;font-size:15px;font-weight:800;margin:6px 0}
-.option:active{background:#d3efbd}.option:focus-visible{outline-color:#573a2d}
-.reveal-stage{position:relative;background:linear-gradient(#56624d 0 65%,#9a7447 66%);height:170px;border-radius:14px;border:2px solid #ba8a4d;overflow:hidden;margin:8px 0 13px}
-.pie{position:absolute;font-size:73px;left:42%;top:30%;opacity:0;animation:appear 2.7s .5s forwards}
-.crate{position:absolute;font-size:96px;left:27%;top:22%;animation:slide 2.6s forwards}
-.sparkle{position:absolute;font-size:36px;top:15%;left:72%;animation:pulse 1s infinite alternate}
-.star{font-size:55px;text-align:center;color:#e6ad46}
-.footer{font-size:10px;color:#719e92;text-align:center;background:#102126;padding:7px}
-#intro{position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;background:linear-gradient(transparent 10%,#06171ba8 53%,#0e1c20ec);padding:20px 22px 25px}
-#intro h1{font-size:34px;line-height:1.04;margin:10px 0;color:#ffe6af;text-shadow:0 3px 7px #000}
-#intro p{max-width:320px;font-size:15px;margin:0 0 16px;line-height:1.4}
-#intro .btn{max-width:330px}
-@keyframes pulse{50%{box-shadow:0 0 0 9px #ffc1642d,0 0 26px #fff4b0}}
-@keyframes glow{to{opacity:.53;transform:scale(1.15)}}@keyframes rain{to{background-position:0 95px}}
-@keyframes fly{to{transform:translate(16px,-26px);opacity:.15}}@keyframes otter{50%{transform:translateY(-5px) rotate(-2deg)}}
-@keyframes speech{0%{transform:scale(.8);opacity:.4}100%{transform:scale(1);opacity:1}}
-@keyframes up{from{transform:translateY(25px);opacity:.4}to{transform:none;opacity:1}}
-@keyframes slide{0%,30%{transform:translateX(0)}100%{transform:translateX(-90px) rotate(-10deg)}}@keyframes appear{0%,28%{opacity:0;transform:scale(.5)}62%,100%{opacity:1;transform:scale(1)}}
-@media(min-height:850px){.stage-shell{max-height:calc(100dvh - 245px)}}
-@media(max-width:360px){.speech{font-size:11px}.ollie img{width:62px;height:82px}.stage-shell{min-height:320px}.case-title{font-size:17px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}.pie{opacity:1!important}.crate{transform:translateX(-90px)!important}}
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#152c30"><meta name="description" content="What Happened Here? A playful animated mystery in Wonderwood."><title>What Happened Here? — Golden Pie Adventure</title><style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#ffecd0;background:#152830}*{box-sizing:border-box}body{margin:0;background:#102227}button{font:inherit;touch-action:manipulation;cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:3px solid #fff3a8;outline-offset:3px}button:disabled{opacity:.48;cursor:default}.hidden{display:none!important}
+.shell{max-width:750px;min-height:100dvh;margin:auto;display:flex;flex-direction:column;background:linear-gradient(#244443,#0f252c);box-shadow:0 0 40px #0008}
+header{flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;background:#10292c;border-bottom:1px solid #57745d}
+.brand{font-size:14px;font-weight:1000;letter-spacing:.3px;color:#ffdb92;line-height:1.15}.brand small{display:block;font-size:10px;color:#afd8c3;letter-spacing:1px;margin-top:3px;font-weight:750}.tools{display:flex;gap:7px}.tool{width:43px;height:43px;border:1px solid #8d9d7c;border-radius:13px;background:#34544e;color:#ffe5a7;font-size:21px}
+.scene{position:relative;width:100%;flex:1;min-height:375px;max-height:calc(100dvh - 230px);overflow:hidden;isolation:isolate;background:#674a31;touch-action:manipulation}
+.scene-bg{position:absolute;width:100%;height:100%;object-fit:fill;inset:0;filter:saturate(1.2) contrast(1.07)}
+.scene:after{content:"";inset:0;position:absolute;z-index:1;background:linear-gradient(#0717176b,transparent 20%,transparent 70%,#081a20a2);pointer-events:none}
+.lights,.rain,.motes,.steam{position:absolute;pointer-events:none;z-index:2}.lights{width:25%;aspect-ratio:1;top:-3%;background:radial-gradient(circle,#fff9d38c,transparent 70%);animation:lantern 3s alternate infinite}.lights.a{left:-8%}.lights.b{right:-8%;animation-delay:-1.5s}.rain{top:18%;left:53%;height:30%;width:30%;background:repeating-linear-gradient(110deg,transparent 0 14px,#c0ffef80 15px 16px,transparent 17px 31px);background-size:100% 90px;opacity:.4;animation:fall 2.3s linear infinite;mix-blend-mode:screen}.motes{width:5px;height:5px;border-radius:100%;background:#fff1ae;box-shadow:0 0 13px 5px #f5bc66;animation:float 5s ease-in-out infinite alternate}.motes.m1{top:30%;left:34%}.motes.m2{top:58%;right:14%;animation-delay:-2s}.motes.m3{top:76%;left:13%;animation-delay:-3s}
+.banner{position:absolute;z-index:4;left:50%;top:10px;transform:translateX(-50%);white-space:nowrap;background:#1c3029e8;border:1px solid #e6bb76;border-radius:99px;padding:6px 13px;font-size:11px;font-weight:900;letter-spacing:.8px;color:#ffe2a3}
+.target{position:absolute;z-index:5;transform:translate(-50%,-50%);border:2px solid #fff3be;border-radius:50%;width:56px;height:56px;display:grid;place-items:center;font-size:27px;color:#37281e;background:#ffe4a3ec;box-shadow:0 0 0 5px #f8c95b67,0 0 22px #fff3a3a0;animation:heartbeat 2s infinite}.target.done{background:#b1ebc1ec;border-color:#efffe9;box-shadow:0 0 0 3px #91f3c57d;animation:none}.target:active{transform:translate(-50%,-50%) scale(.86)}.target.blink{animation:heartbeat .6s 3}.target small{position:absolute;bottom:-17px;background:#192b2ce8;border-radius:8px;padding:2px 6px;color:#fff4cf;font-size:9px;white-space:nowrap;pointer-events:none}
+.character{position:absolute;z-index:4;border:0;background:transparent;color:inherit;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:0;padding:0;animation:sway 3.2s ease-in-out infinite}.character:active{scale:.95}.character .face{font-size:43px;line-height:1;filter:drop-shadow(0 4px 3px #0009)}.character span:last-child{font-size:10px;background:#203e39ef;color:#ffe2a1;border:1px solid #d2ac6b;border-radius:9px;padding:3px 7px;font-weight:850;white-space:nowrap}.character.raccoon{left:22%;top:51%;animation-delay:-.5s}.character.fox{left:76%;top:46%;animation-delay:-1s}.character.beaver{left:48%;top:42%;animation-delay:-2s}.character.talked span:last-child{background:#2d6952}
+.scene-pie{position:absolute;z-index:4;left:50%;top:66%;font-size:38px;transform:translate(-50%,-50%);opacity:0;pointer-events:none}.scene-pie.found{opacity:1;animation:pop .5s}
+.crate-prop{position:absolute;z-index:5;left:82%;top:76%;border:0;background:transparent;font-size:48px;transform:translate(-50%,-50%);filter:drop-shadow(2px 5px 2px #0007);animation:wobble 3s infinite}.crate-prop.moved{animation:pushCrate .7s forwards}.crate-prop.moved:disabled{opacity:1}
+.ollie{position:absolute;z-index:7;left:5px;bottom:4px;display:flex;align-items:flex-end;max-width:75%;gap:0;pointer-events:none}.ollie img{width:85px;height:106px;object-fit:contain;filter:drop-shadow(0 5px 6px #0009);animation:bob 3s infinite}.bubble{font-size:12px;font-weight:850;line-height:1.3;max-width:270px;background:#fff0c0;color:#38291f;border:2px solid #b88552;padding:9px 10px;border-radius:14px 14px 14px 3px;margin-bottom:21px;box-shadow:0 5px 0 #1d2b25bb}.bubble.pop{animation:pop .3s}
+.intro{position:absolute;inset:0;z-index:12;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;background:linear-gradient(transparent 7%,#081b20ab 49%,#08191fec);padding:20px 18px 28px}.intro h1{font-size:38px;color:#ffe5a7;line-height:1.03;margin:10px 0;text-shadow:0 5px 8px #000b}.intro p{max-width:330px;font-size:15px;line-height:1.4;margin:0 0 18px}.eyebrow{color:#ffde94;font-size:10px;font-weight:950;letter-spacing:1.3px}
+.hud{flex:none;min-height:165px;padding:10px 13px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(#213d3c,#152c2f);border-top:2px solid #ab8550}.row{display:flex;align-items:center;justify-content:space-between;gap:9px}.title{font-size:19px;font-weight:1000;line-height:1.2;margin:3px 0}.status{font-size:12px;color:#bdd2c8}.bar{margin:8px 0;height:7px;background:#0b2424;border-radius:99px;overflow:hidden}.bar>div{height:100%;width:0;background:linear-gradient(90deg,#6bddac,#ffda75);transition:width .25s}
+.tokens{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;align-items:center;min-height:37px}.token{min-width:38px;height:36px;background:#2e574c;border:1px solid #648b75;border-radius:11px;display:grid;place-items:center;font-size:19px;opacity:.38}.token.on{opacity:1;background:#3c8a62}.actions{display:flex;gap:9px;margin-top:10px}.btn{background:#ffd178;color:#352824;border:2px solid #ffe5a5;border-radius:13px;min-height:48px;padding:10px 14px;font-size:15px;font-weight:950;box-shadow:0 3px 0 #906136;flex:1}.btn.alt{flex:0 0 auto;background:#32554e;color:#ffe7b3;border-color:#8ba285;box-shadow:none}.btn:disabled{opacity:.47}.foot{padding:6px;background:#10262a;text-align:center;color:#7fa99b;font-size:10px}
+.overlay{position:fixed;inset:0;background:#00171bd1;z-index:30;display:flex;align-items:flex-end;justify-content:center;padding:10px 10px calc(10px + env(safe-area-inset-bottom))}.panel{width:min(100%,600px);background:#fff0cf;color:#38291f;padding:16px;border:3px solid #cc9554;border-radius:22px;max-height:88dvh;overflow:auto;box-shadow:0 -10px 50px #0009;animation:rise .25s}.panel-top{display:flex;justify-content:space-between;gap:8px}.panel h2{font-size:23px;line-height:1.1;margin:5px 0 10px}.close{width:43px;height:43px;flex:none;border:1px solid #ad8150;border-radius:12px;font-size:24px;background:#ead0a1;color:#513526}.panel p{font-size:14px;line-height:1.5}.visual{display:flex;align-items:center;gap:12px}.visual img{width:39%;aspect-ratio:1;object-fit:contain;border-radius:12px;background:#98754e}.visual p{font-size:14px}.choice{width:100%;margin:6px 0;padding:12px;border:2px solid #c29659;border-radius:13px;min-height:56px;background:#f8e1ad;color:#3b281d;text-align:left;font-size:15px;font-weight:850}.choice:active{background:#d5edbb}.anim{height:170px;border-radius:13px;background:linear-gradient(#3e6861 0 65%,#835f3b 66%);margin:9px 0;position:relative;overflow:hidden}.anim .cake{font-size:73px;position:absolute;left:40%;top:24%;opacity:0;animation:pieReveal 2.4s 0.5s forwards}.anim .box{font-size:91px;position:absolute;left:28%;top:20%;animation:slide 2.4s forwards}.anim .drop{position:absolute;top:7%;left:74%;font-size:37px;animation:drip 1.3s infinite}.stars{text-align:center;font-size:45px}.footnote{color:#755135;font-size:12px}
+@keyframes lantern{to{transform:scale(1.18);opacity:.6}}@keyframes fall{to{background-position:0 90px}}@keyframes float{to{transform:translate(11px,-24px);opacity:.2}}@keyframes heartbeat{50%{box-shadow:0 0 0 11px #ffd7741b,0 0 26px #fff6b5}}@keyframes sway{50%{transform:translate(-50%,-52%) rotate(-3deg)}}@keyframes bob{50%{transform:translateY(-6px) rotate(2deg)}}@keyframes wobble{50%{transform:translate(-50%,-50%) rotate(4deg)}}@keyframes pushCrate{to{transform:translate(-145%,-50%) rotate(-11deg)}}@keyframes pop{0%{transform:scale(.85);opacity:.55}100%{transform:scale(1);opacity:1}}@keyframes rise{from{transform:translateY(22px);opacity:.5}to{transform:none;opacity:1}}@keyframes slide{to{transform:translateX(-90px) rotate(-12deg)}}@keyframes pieReveal{0%,27%{opacity:0;transform:scale(.6)}70%,100%{opacity:1;transform:scale(1)}}@keyframes drip{50%{transform:translateY(24px);opacity:.4}}
+@media(max-width:360px){.scene{min-height:320px}.bubble{font-size:11px}.ollie img{width:72px;height:93px}.title{font-size:17px}.target{width:48px;height:48px}.intro h1{font-size:33px}.character .face{font-size:37px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.anim .cake{opacity:1!important}.anim .box{transform:translateX(-90px)!important}}
 </style></head><body>
-<div class="game">
-<header><div class="brand">🦦 WHAT HAPPENED HERE?<small>WONDERWOOD • CASE 01</small></div><div class="controls"><button class="iconbtn" id="sound" aria-label="Mute sound">🔊</button><button class="iconbtn" id="reset" aria-label="Restart game">↺</button></div></header>
-<main class="stage-shell" aria-label="Explore the Cedar Lantern tavern">
-<img class="stage-art" src="assets/tavern-scene.svg" alt="An animal tavern with a raccoon bartender, a fox musician, an empty pie stand and wooden crates">
-<div class="ambient lamp a"></div><div class="ambient lamp b"></div><div class="ambient rain"></div><div class="ambient floaty f1"></div><div class="ambient floaty f2"></div><div class="ambient floaty f3"></div>
-<div class="stage-title">🌲 THE CEDAR LANTERN</div><div id="hotspots"></div>
-<div class="ollie hidden" id="ollie"><img src="assets/ollie.svg" alt="Ollie the otter detective"><div class="speech" id="speech" aria-live="polite">Someone's taken the pie. Let's find it!</div></div>
-<div id="intro"><div class="overline">A MINI MYSTERY IN WONDERWOOD</div><h1>The Missing<br>Golden Pie</h1><p>A pie has vanished from the tavern. Can you figure out where it went?</p><button id="start" class="btn">🔎 Let's investigate!</button></div>
-</main>
-<section class="bottom" id="hud"><div class="row"><div><div class="overline">THE MYSTERY</div><div class="case-title">The Missing Golden Pie</div></div><b class="tiny" id="count">0 / 5 clues</b></div>
-<div class="progress-track"><div class="progress-fill" id="progress"></div></div>
-<div class="evidence" id="evidence" aria-label="Found clues"></div>
-<div class="actions"><button class="btn secondary" id="hint">💡 Hint</button><button class="btn" id="solve" disabled>🔎 Find key clues first</button></div>
-</section><div class="footer">Seattle-born • Made for curious minds worldwide • v0.8</div>
-</div>
-<div class="overlay hidden" id="overlay" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
-<div class="panel"><div class="panel-top"><div class="caption" id="panelLabel">CLUE FOUND!</div><button class="close" id="close" aria-label="Close">×</button></div>
-<h2 id="panelTitle"></h2><div id="panelBody"></div><button class="btn" id="continue">Keep exploring →</button></div></div>
+<div class="shell"><header><div class="brand">🦦 WHAT HAPPENED HERE?<small>WONDERWOOD • CASE 01</small></div><div class="tools"><button id="audio" class="tool" aria-label="Mute sound">🔊</button><button id="restart" class="tool" aria-label="Restart">↺</button></div></header>
+<main class="scene" id="scene"><img class="scene-bg" src="assets/tavern-scene.svg" alt="The Cedar Lantern animal tavern. A raccoon bartender, a fox musician and a moved crate are visible.">
+<div class="lights a"></div><div class="lights b"></div><div class="rain"></div><div class="motes m1"></div><div class="motes m2"></div><div class="motes m3"></div><div class="banner">🌲 THE CEDAR LANTERN</div>
+<div id="interact"></div><div class="scene-pie" id="scenePie">🥧</div>
+<div id="ollie" class="ollie hidden"><img src="assets/ollie.svg" alt="Ollie the otter detective"><div class="bubble" id="bubble" aria-live="polite">A missing pie? I'm on the case!</div></div>
+<div class="intro" id="intro"><div class="eyebrow">AN ANIMATED MINI MYSTERY</div><h1>The Missing<br>Golden Pie</h1><p>Rocco's famous pie vanished. The guests blame one another. Can you discover what really happened?</p><button class="btn" id="begin">🔎 Enter the tavern</button></div></main>
+<section class="hud"><div class="row"><div><div class="eyebrow">INVESTIGATION</div><div class="title" id="phaseTitle">The Missing Golden Pie</div></div><div id="count" class="status">0 discoveries</div></div><div class="bar"><div id="progress"></div></div><div class="tokens" id="tokens"></div><div class="actions"><button class="btn alt" id="hint">💡 Hint</button><button class="btn" id="action" disabled>Explore the tavern</button></div></section><div class="foot">Wonderwood v0.9 • Seattle-born, world-ready</div></div>
+<div class="overlay hidden" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="panel"><div class="panel-top"><div><div class="eyebrow" id="modalTag">DISCOVERY</div><h2 id="modalTitle">A clue!</h2></div><button id="close" class="close" aria-label="Close">×</button></div><div id="modalBody"></div><button class="btn" id="next">Continue →</button></div></div>
 <script>
-(function(){
-"use strict";
+(function(){"use strict";
 const $=id=>document.getElementById(id);
-const clues=[
-{id:"stand",emoji:"🥧",x:48,y:66,name:"Empty pie stand",line:"The pie disappeared while everyone was listening to the music!",note:"Only a few crumbs remain.",essential:false},
-{id:"tracks",emoji:"🐾",x:73,y:84,name:"Sticky footprints",line:"Aha! These sticky prints lead straight to the storage corner.",note:"Follow the trail toward the crates.",essential:true},
-{id:"crates",emoji:"📦",x:84,y:73,name:"Crooked storage crate",line:"That crate wasn't there earlier. Something is hiding behind it!",note:"The footprints stop behind this crate.",essential:true},
-{id:"apron",emoji:"🧺",x:16,y:76,name:"Stained kitchen apron",line:"A messy apron! But is that really proof of anything?",note:"Ordinary baking can leave stains. Careful!",essential:false},
-{id:"spill",emoji:"🫗",x:64,y:62,name:"Spilled berry drink",line:"Hmm! Someone tipped a drink. That explains why the floor is sticky.",note:"A distraction, not the answer.",essential:false}
+const clueData=[
+{id:"crumbs",label:"Pie crumbs",icon:"🥧",x:46,y:67,view:"stand",text:"A trail of golden crumbs! The pie didn't just disappear into thin air.",note:"Fresh crumbs lead away from the empty stand."},
+{id:"tracks",label:"Sticky prints",icon:"🐾",x:70,y:83,view:"tracks",text:"Berry-colored paw prints lead toward the crates. Someone went that way.",note:"Follow the sticky footprints across the floor."},
+{id:"spill",label:"Spilled drink",icon:"🫗",x:61,y:61,view:"spill",text:"Oops. Purple berry juice. That's probably why the prints are sticky.",note:"The spilled drink explains the color of the trail."},
+{id:"apron",label:"Kitchen apron",icon:"🧺",x:16,y:76,view:"apron",text:"A floury apron? Rocco owns three. That's not enough to accuse him.",note:"Not every suspicious object proves guilt."}
 ];
-let found=new Set(),started=false,solved=false,muted=false,ctx,focusBefore=null,modalMode="",timeOpened=0;
-function playTone(freq=640,duration=.07){if(muted)return;try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;ctx=ctx||new Audio();const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.value=freq;g.gain.setValueAtTime(.04,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+duration)}catch(e){}}
-function line(text){$("speech").textContent=text;const el=$("speech");el.classList.remove("bounce");void el.offsetWidth;el.classList.add("bounce")}
-function openPanel(label,title,body,buttonText,mode){focusBefore=document.activeElement;modalMode=mode;$("panelLabel").textContent=label;$("panelTitle").textContent=title;$("panelBody").innerHTML=body;$("continue").textContent=buttonText||"Keep exploring →";$("overlay").classList.remove("hidden");$("close").focus();timeOpened=Date.now()}
-function closePanel(){if(modalMode==="reveal")return;$("overlay").classList.add("hidden");focusBefore?.focus?.()}
-function render(){
-const spots=$("hotspots");spots.innerHTML="";
-for(const c of clues){const b=document.createElement("button");b.className="clue"+(found.has(c.id)?" seen":"");b.style.left=c.x+"%";b.style.top=c.y+"%";b.textContent=found.has(c.id)?"✓":c.emoji;b.setAttribute("aria-label","Inspect "+c.name);b.onclick=()=>inspect(c);spots.appendChild(b)}
-const tray=$("evidence");tray.innerHTML="";
-for(const c of clues){const b=document.createElement("button");b.type="button";b.className="token"+(found.has(c.id)?" found":"");b.textContent=found.has(c.id)?c.emoji:"?";b.setAttribute("aria-label",found.has(c.id)?"Review "+c.name:"Undiscovered clue");b.disabled=!found.has(c.id);b.onclick=()=>inspect(c);tray.appendChild(b)}
-$("count").textContent=found.size+" / 5 clues";$("progress").style.width=(found.size/5*100)+"%";
-const ready=found.has("tracks")&&found.has("crates");
-$("solve").disabled=!ready||solved;$("solve").textContent=ready?"✨ Solve the mystery":"🔎 Find key clues first";
-}
-function inspect(c){
-if(!started||solved)return;const fresh=!found.has(c.id);found.add(c.id);render();
-if(fresh){line(c.line);playTone(630+found.size*75,.12)}
-const body='<div class="clue-close"><img src="assets/'+c.id+'.svg" alt="Close-up of '+c.name+'"><div><div class="caption">OLLIE NOTICED</div><p>'+c.line+'</p><p><strong>'+c.note+'</strong></p></div></div>';
-openPanel(fresh?"✨ NEW DISCOVERY":"🔍 LOOK AGAIN",c.name,body,found.has("tracks")&&found.has("crates")?"Continue — ready to solve!":"Keep exploring →","clue");
-if(fresh&&found.has("tracks")&&found.has("crates"))line("We've found a trail and a moved crate. I think we can solve this!");
-}
-function deduction(){
-if(!(found.has("tracks")&&found.has("crates"))||solved)return;
-const body='<p style="line-height:1.45">The sticky paw prints lead to a crooked crate. <strong>Where is the missing pie?</strong></p><button class="option" data-choice="0">🦊 The fox carried it away</button><button class="option" data-choice="1">📦 It is hidden behind the crates</button><button class="option" data-choice="2">🦝 The bartender ate it</button>';
-openPanel("🦦 OLLIE HAS A THEORY","What happened here?",body,"← Back to clues","solve");
-for(const btn of $("panelBody").querySelectorAll("[data-choice]"))btn.onclick=()=>reveal(Number(btn.dataset.choice));
-}
-function reveal(choice){solved=true;const win=choice===1;const body='<div class="reveal-stage" aria-label="An animated crate moves aside to reveal the golden pie"><span class="pie">🥧</span><span class="crate">📦</span><span class="sparkle">✨</span></div><div class="star">'+(win?"⭐ ⭐ ⭐":"⭐ ⭐")+'</div><p style="font-size:16px;text-align:center;font-weight:800">'+(win?"You followed the evidence!":"Surprise! The clues point here.")+'</p><p style="font-size:14px;line-height:1.5">The sticky footprints led to a crooked crate. Ollie slides it aside and finds the missing pie! We know <strong>where</strong> it went, but not yet who moved it.</p><p style="font-size:13px;text-align:center;color:#704d30">Next mystery: The Music That Wouldn’t Stop — coming soon.</p>';
-openPanel("🎉 CASE COMPLETE",win?"Mystery solved!":"The pie is found!",body,"↺ Play again","reveal");
-$("close").classList.add("hidden");playTone(win?930:690,.2);line("Case closed! That pie was hiding in plain sight!");
-}
-function reset(){found.clear();started=false;solved=false;$("intro").classList.remove("hidden");$("ollie").classList.add("hidden");$("overlay").classList.add("hidden");$("close").classList.remove("hidden");line("Someone's taken the pie. Let's find it!");render()}
-$("start").onclick=()=>{started=true;$("intro").classList.add("hidden");$("ollie").classList.remove("hidden");line("Tap anything glowing. The clues might surprise you!");playTone(730,.13);render()};
-$("solve").onclick=deduction;
-$("hint").onclick=()=>{if(!started){$("start").focus();return}let msg;if(!found.has("tracks"))msg="Look carefully at the footprints near the floor.";else if(!found.has("crates"))msg="Where do those footprints lead? Maybe a crate moved.";else msg="We've got enough clues. Tap Solve the mystery!";line(msg);playTone(440,.08)};
-$("reset").onclick=reset;
-$("sound").onclick=()=>{muted=!muted;$("sound").textContent=muted?"🔇":"🔊";$("sound").setAttribute("aria-label",muted?"Unmute sound":"Mute sound")};
-$("close").onclick=closePanel;
-$("continue").onclick=()=>{if(modalMode==="reveal"){reset();return}closePanel();if(modalMode==="solve")line("Take another look. The trail tells the story.")};
-$("overlay").addEventListener("click",e=>{if(e.target===$("overlay"))closePanel()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("overlay").classList.contains("hidden"))closePanel()});
-render();
+const witnesses=[
+{id:"rocco",label:"Rocco",icon:"🦝",cls:"raccoon",line:"I did NOT eat it! I noticed rain dripping onto the pie stand. Then the music started!",note:"Rocco noticed a leak above the pie stand."},
+{id:"fern",label:"Fern",icon:"🦊",cls:"fox",line:"I heard a scraping sound during my song. But I never left the stage!",note:"A crate moved while the music played."},
+{id:"bix",label:"Bix",icon:"🦫",cls:"beaver",line:"I was fixing that leaky roof... Wait, why are you looking at my tool belt?",note:"Bix was doing repairs near the leaking roof."}
+];
+let found=new Set(),talked=new Set(),started=false,uncovered=false,solved=false,muted=false,audioContext=null,priorFocus=null,modalType="";
+const items=[...clueData.map(x=>({id:x.id,icon:x.icon})),...witnesses.map(x=>({id:x.id,icon:x.icon})),{id:"crate",icon:"📦"}];
+function tone(f=700,t=.08){if(muted)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;audioContext=audioContext||new C();const o=audioContext.createOscillator(),g=audioContext.createGain();o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(.04,audioContext.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+t);o.connect(g);g.connect(audioContext.destination);o.start();o.stop(audioContext.currentTime+t)}catch(e){}}
+function ollie(line){const el=$("bubble");el.textContent=line;el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop")}
+function open(tag,title,body,nextLabel="Keep exploring →",type="clue"){priorFocus=document.activeElement;modalType=type;$("modalTag").textContent=tag;$("modalTitle").textContent=title;$("modalBody").innerHTML=body;$("next").textContent=nextLabel;$("close").classList.toggle("hidden",type==="ending");$("overlay").classList.remove("hidden");$("next").focus()}
+function close(){if(modalType==="ending")return;$("overlay").classList.add("hidden");priorFocus?.focus?.()}
+function progress(){return found.size+talked.size+(uncovered?1:0)}
+function canMove(){return found.has("tracks")&&talked.has("fern")}
+function canConclude(){return uncovered&&talked.has("rocco")&&talked.has("bix")}
+function render(){const area=$("interact");area.innerHTML="";if(started&&!solved){for(const c of clueData){const b=document.createElement("button");b.className="target"+(found.has(c.id)?" done":"");b.style.left=c.x+"%";b.style.top=c.y+"%";b.textContent=found.has(c.id)?"✓":c.icon;b.setAttribute("aria-label","Inspect "+c.label);b.onclick=()=>inspect(c);area.append(b)}
+for(const w of witnesses){const b=document.createElement("button");b.className="character "+w.cls+(talked.has(w.id)?" talked":"");b.innerHTML='<span class="face">'+w.icon+'</span><span>'+w.label+' · talk</span>';b.setAttribute("aria-label","Talk to "+w.label);b.onclick=()=>talk(w);area.append(b)}
+const box=document.createElement("button");box.className="crate-prop"+(uncovered?" moved":"");box.textContent="📦";box.style.opacity=uncovered?"1":"1";box.setAttribute("aria-label",uncovered?"Pie discovered behind crate":"Move the suspicious crate");box.onclick=moveCrate;area.append(box)}
+$("scenePie").classList.toggle("found",uncovered);
+const tally=progress();$("count").textContent=tally+" / 8 discoveries";$("progress").style.width=(tally/8*100)+"%";
+const tray=$("tokens");tray.innerHTML="";for(const x of items){const have=found.has(x.id)||talked.has(x.id)||(x.id==="crate"&&uncovered);const el=document.createElement("div");el.className="token"+(have?" on":"");el.textContent=have?x.icon:"?";el.title=x.id;tray.append(el)}
+const action=$("action");if(!started){action.disabled=true;action.textContent="Enter the tavern";return}if(solved){action.disabled=true;action.textContent="Case solved";return}if(canConclude()){action.disabled=false;action.textContent="✨ Solve the mystery";$("phaseTitle").textContent="What really happened?"}else if(canMove()){action.disabled=false;action.textContent="📦 Move the crate";$("phaseTitle").textContent="Follow the evidence"}else{action.disabled=true;action.textContent="Investigate & talk";$("phaseTitle").textContent="The Missing Golden Pie"}}
+function inspect(c){if(!started||solved)return;const fresh=!found.has(c.id);found.add(c.id);ollie(c.text);if(fresh)tone(660+progress()*40,.1);render();open(fresh?"✨ NEW CLUE":"🔎 LOOK CLOSER",c.label,'<div class="visual"><img src="assets/'+c.view+'.svg" alt="Illustrated close-up of '+c.label+'"><div><p><strong>'+c.text+'</strong></p><p>'+c.note+'</p></div></div>',"Back to the scene","clue")}
+function talk(w){if(!started||solved)return;const first=!talked.has(w.id);talked.add(w.id);ollie(w.line);if(first)tone(600+progress()*45,.12);render();open("💬 WITNESS INTERVIEW",w.icon+" "+w.label,'<p style="font-size:18px;font-weight:800">“'+w.line+'”</p><p class="footnote">'+w.note+'</p>',"Thanks, "+w.label+"!","talk")}
+function moveCrate(){if(!canMove()){ollie("Those crates look heavy. Maybe find where the prints go—and ask who heard something.");tone(420);return}if(uncovered){ollie("We found the pie! But why was it hidden there?");return}uncovered=true;ollie("There it is! The pie is safe. But who moved it—and why?");tone(940,.17);render();open("🎉 SECRET FOUND","The golden pie!",'<div class="anim"><span class="cake">🥧</span><span class="box">📦</span><span class="drop">💧</span></div><p><strong>Behind the crate!</strong> The pie is safe. It looks like someone moved it away from the leak.</p><p>Talk to Rocco and Bix to find out why.</p>',"Keep investigating →","reveal")}
+function decide(){const body='<p><strong>We found the pie behind a crate.</strong> Rocco mentioned a roof leak, Fern heard a crate move, and Bix was repairing the roof. What most likely happened?</p><button class="choice" data-answer="0">🦝 Rocco hid it so nobody could eat it.</button><button class="choice" data-answer="1">🦫 Bix moved it to protect it from the dripping roof.</button><button class="choice" data-answer="2">🦊 Fern stole it during the song.</button>';open("🧠 FINAL DEDUCTION","Why was the pie moved?",body,"← Inspect again","deduction");for(const btn of $("modalBody").querySelectorAll("[data-answer]"))btn.onclick=()=>finish(+btn.dataset.answer)}
+function finish(n){solved=true;render();const correct=n===1;const body='<div class="anim"><span class="cake">🥧</span><span class="box">📦</span><span class="drop">💧</span></div><div class="stars">'+(correct?"⭐ ⭐ ⭐":"⭐ ⭐")+'</div><p style="text-align:center;font-size:17px;font-weight:900">'+(correct?"Brilliant detective work!":"Plot twist! It was a rescue mission!")+'</p><p><strong>Bix moved the pie to keep it dry while repairing the leaky roof.</strong> But he forgot to tell Rocco. The whole tavern thought it was stolen!</p><p>Rocco apologizes. Bix gets a slice. Ollie asks for two. 🦦</p><p class="footnote">The next case: The Music That Wouldn’t Stop — coming soon.</p>';open("🎊 CASE COMPLETE","The pie wasn't stolen!",body,"↺ Play again","ending");tone(correct?900:650,.2)}
+function restart(){found.clear();talked.clear();started=false;uncovered=false;solved=false;$("intro").classList.remove("hidden");$("ollie").classList.add("hidden");$("overlay").classList.add("hidden");render()}
+$("begin").onclick=()=>{started=true;$("intro").classList.add("hidden");$("ollie").classList.remove("hidden");ollie("That pie vanished! Tap clues, chat with the animals, and follow the trail.");tone(760,.12);render()};
+$("action").onclick=()=>{if(canConclude())decide();else if(canMove())moveCrate()};
+$("hint").onclick=()=>{if(!started)return;let msg;if(!found.has("tracks"))msg="Start with the sticky prints on the floor.";else if(!talked.has("fern"))msg="Ask Fern what he heard during the song.";else if(!uncovered)msg="Try moving that crate!";else if(!talked.has("rocco"))msg="Ask Rocco what he noticed before the pie vanished.";else if(!talked.has("bix"))msg="Bix knows something about the roof. Talk to him.";else msg="You have the evidence. Solve the case!";ollie(msg);tone(480,.07)};
+$("audio").onclick=()=>{muted=!muted;$("audio").textContent=muted?"🔇":"🔊";$("audio").setAttribute("aria-label",muted?"Unmute sound":"Mute sound")};
+$("restart").onclick=restart;$("close").onclick=close;$("next").onclick=()=>{if(modalType==="ending"){restart();return}close()};$("overlay").onclick=e=>{if(e.target===$("overlay"))close()};document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("overlay").classList.contains("hidden"))close()});render();
 })();
 </script></body></html>
